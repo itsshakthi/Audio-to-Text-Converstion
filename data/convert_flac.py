@@ -1,13 +1,18 @@
 import os
-import soundfile as sf
+from pydub import AudioSegment
 
-input_folder = r"C:\Users\shakt\OneDrive\Desktop\voice to text\data\raw_audio"
-output_folder = r"C:\Users\shakt\OneDrive\Desktop\voice to text\data\processed_audio"
+# Correct local project path
+input_folder = "data/raw_audio"
+output_folder = "data/processed_audio"
+
+os.makedirs(output_folder, exist_ok=True)
 
 for file in os.listdir(input_folder):
     if file.endswith(".flac"):
         flac_path = os.path.join(input_folder, file)
         wav_path = os.path.join(output_folder, file.replace(".flac", ".wav"))
-        data, samplerate = sf.read(flac_path)
-        sf.write(wav_path, data, samplerate)
-        print(f"Converted {file} → {wav_path}")
+
+        audio = AudioSegment.from_file(flac_path, format="flac")
+        audio.export(wav_path, format="wav")
+
+        print(f"Converted {file} -> {wav_path}")
